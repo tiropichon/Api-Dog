@@ -49,14 +49,27 @@ function init(){
 
 	const labelFiltro = document.createElement("label");
 	labelFiltro.setAttribute('for','filtroRaza');
-	labelFiltro.textContent="Filtrar por raza";
+	labelFiltro.textContent="Filtrar por raza:";
 	document.getElementById("contenedor-filtros").appendChild(labelFiltro);
 
 	const selectRaza = document.createElement("select");
 	selectRaza.setAttribute('id','filtroRaza');
+	selectRaza.setAttribute('onchange','mostrarImagen()');
 	selectRaza.classList.add("filtros");
 	document.getElementById("contenedor-filtros").appendChild(selectRaza);
 
+	const option = document.createElement("option");
+	option.value=0;
+	option.setAttribute('selected','selected');
+	option.innerHTML="Todas las razas";
+	document.getElementById("filtroRaza").appendChild(option);
+
+	const labelFiltroSubraza = document.createElement("label");
+	labelFiltroSubraza.setAttribute('for','filtroSubraza');
+	labelFiltroSubraza.textContent="Filtrar por Subraza:";
+	document.getElementById("contenedor-filtros").appendChild(labelFiltroSubraza);
+
+	crearFiltroSubrazas();
 
 	//Div principal
 	const divContenedor = document.createElement("div");
@@ -91,23 +104,62 @@ function init(){
 	btnEliminar.innerHTML="Eliminar imagen";
 	document.querySelector(".contenedor-botones").appendChild(btnEliminar);
 
-	mostrarImagen();
 	obtenerDatosRazas("https://dog.ceo/api/breeds/list/all");
 
-	numRazas=1;
-	for(let prop in listaRazas){
-		const option = document.createElement("option");
-		console.log(prop);
-		option.value=numRazas;
-		option.text= prop;
-		document.getElementById("filtroRaza").appendChild(option);
-		numRazas++;
-	}
+	mostrarImagen();
+	
 
 }
 
+function crearFiltroSubrazas(){
+	console.log("Entra a crearFiltroSubrazas");
+	const parent = "filtroSubraza";
+
+	const selectSubraza = document.createElement("select");
+	selectSubraza.setAttribute('id','filtroSubraza');
+	selectSubraza.setAttribute('onchange','mostrarImagen()');
+	selectSubraza.classList.add("filtros");
+	document.getElementById("contenedor-filtros").appendChild(selectSubraza);
+
+	const optionSubraza = document.createElement("option");
+	optionSubraza.value=0;
+	optionSubraza.setAttribute('id','optionSubraza');
+	optionSubraza.setAttribute('selected','selected');
+	optionSubraza.innerHTML="Todas las subrazas";
+	document.getElementById("filtroSubraza").appendChild(optionSubraza);
+}
+
+function borrarFiltroSubrazas(){
+	const parent = document.getElementById("contenedor-filtros");
+	const child = document.getElementById("filtroSubraza");
+	parent.removeChild(child);
+
+	//crearFiltroSubrazas();
+}
+
 function mostrarImagen(){
-	const url="https://dog.ceo/api/breeds/image/random";
+	const filterSelected =document.getElementById("filtroRaza");
+	const filterSubrazaSelected = document.getElementById("filtroSubraza");
+	console.log("Filter selected: "+filterSelected.value);
+	console.log("Filter subraza selected: "+filterSubrazaSelected.value);
+
+	let url="";
+
+	console.log("Entra a cargar subrazas");
+	obtenerDatosSubrazas();
+
+
+	if(filterSelected.value==0 && filterSubrazaSelected.value==0){
+		url="https://dog.ceo/api/breeds/image/random";
+		console.log("url: "+url);
+	}else if(filterSelected.value!=0 && filterSubrazaSelected.value==0){
+		url=`https://dog.ceo/api/breed/${filterSelected.value}/images/random`;
+		console.log("url: "+url);
+		} else {
+			url=`https://dog.ceo/api/breed/${filterSelected.value}/${filterSubrazaSelected.value}/images/random`;
+			console.log("url: "+url);
+		}
+
 	let imagen = document.getElementById("imagen-contenedor");
 
 	//Compruebo que el elemento imagen está creado
@@ -172,7 +224,7 @@ async function obtenerDatos(url){
 
 async function obtenerDatosRazas(url){
 	try{
-		console.log('obtenerDatos');
+		console.log('obtenerDatos Raza');
 		await fetch(url)
   			.then(response => {
   				if(response.ok){
@@ -187,7 +239,10 @@ async function obtenerDatosRazas(url){
   			.then(json=>{
   				try{
   					for(let prop in json.message){
-  						rellenarListaRazas(prop);
+  						const option = document.createElement("option");
+						option.value=prop;
+						option.innerHTML=prop;
+						document.getElementById("filtroRaza").appendChild(option);
   					}
   				}catch (error){
   					console.log(`No se pudo cargar la imagen. Error: ${error}`);
@@ -195,6 +250,49 @@ async function obtenerDatosRazas(url){
   				  				
   			})
   			.catch(error => console.error(error))
+	}catch (error){
+		alert(`Ha habido un error: ${error}`);
+	}
+}
+
+async function obtenerDatosSubrazas(){
+	try{
+		console.log('obtenerDatos Subraza');
+		let filterSelected =document.getElementById("filtroRaza");
+
+		if(filterSelected.value!=0){
+			console.log("Entra a crear url subraza");
+			let url =`https://dog.ceo/api/breed/${filterSelected.value}/list`;
+			console.log("url subraza:" + url);
+
+			await fetch(url)
+  			.then(response => {
+  				if(response.ok){
+  					console.log('response ok');
+  					return response.json();
+  				}
+
+  				reject(
+  					"No hemos podido recuperar ese json. El código de respuesta es: " + response.status
+  				);
+  			})
+  			.then(json=>{
+  				try{
+  					for(let i=0;i<json.message.length;i++){
+  						console.log(`Valor subraza: ${json.message[i]}`)
+  						const option = document.createElement("option");
+  						option.id="optionSubraza";
+						option.value=json.message[i];
+						option.innerHTML=json.message[i];
+						document.getElementById("filtroSubraza").appendChild(option);
+  					}
+  				}catch (error){
+  					console.log(`No se pudo cargar la imagen. Error: ${error}`);
+  				}
+  				  				
+  			})
+  			.catch(error => console.error(error))
+		}
 	}catch (error){
 		alert(`Ha habido un error: ${error}`);
 	}
