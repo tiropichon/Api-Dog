@@ -1,3 +1,11 @@
+let listaImagenes = [];
+let listaRazas = [];
+
+function crearRaza(nombre){
+	this.nombre;
+	this.visto=0;
+}
+
 function init(){
 	// creo <header>, <main> y <footer> dentro del body
 	const newheader = document.createElement("header");
@@ -32,6 +40,25 @@ function init(){
 
 	//Creo la estructura que contendra el main
 	//Contenedor para la imagen dentro del <main>
+
+	//Contenedor para los filtros dentro del <main>
+	const divFiltros = document.createElement("div");
+	divFiltros.setAttribute('id','contenedor-filtros');
+	divFiltros.classList.add("contenedor-filtros");
+	document.querySelector("main").appendChild(divFiltros);
+
+	const labelFiltro = document.createElement("label");
+	labelFiltro.setAttribute('for','filtroRaza');
+	labelFiltro.textContent="Filtrar por raza";
+	document.getElementById("contenedor-filtros").appendChild(labelFiltro);
+
+	const selectRaza = document.createElement("select");
+	selectRaza.setAttribute('id','filtroRaza');
+	selectRaza.classList.add("filtros");
+	document.getElementById("contenedor-filtros").appendChild(selectRaza);
+
+
+	//Div principal
 	const divContenedor = document.createElement("div");
 	divContenedor.setAttribute('id','contenedor');
 	divContenedor.classList.add("contenedor");
@@ -63,6 +90,20 @@ function init(){
 	btnEliminar.setAttribute('onclick','eliminarImagen()');
 	btnEliminar.innerHTML="Eliminar imagen";
 	document.querySelector(".contenedor-botones").appendChild(btnEliminar);
+
+	mostrarImagen();
+	obtenerDatosRazas("https://dog.ceo/api/breeds/list/all");
+
+	numRazas=1;
+	for(let prop in listaRazas){
+		const option = document.createElement("option");
+		console.log(prop);
+		option.value=numRazas;
+		option.text= prop;
+		document.getElementById("filtroRaza").appendChild(option);
+		numRazas++;
+	}
+
 }
 
 function mostrarImagen(){
@@ -116,8 +157,42 @@ async function obtenerDatos(url){
   				);
   			})
   			.then(json=>{
-  				console.log(json.message);
-  				cargarImagen(json.message);  				
+  				try{
+  					cargarImagen(json.message);
+  				}catch (error){
+  					console.log(`No se pudo cargar la imagen. Error: ${error}`);
+  				}
+  				  				
+  			})
+  			.catch(error => console.error(error))
+	}catch (error){
+		alert(`Ha habido un error: ${error}`);
+	}
+}
+
+async function obtenerDatosRazas(url){
+	try{
+		console.log('obtenerDatos');
+		await fetch(url)
+  			.then(response => {
+  				if(response.ok){
+  					console.log('response ok');
+  					return response.json();
+  				}
+
+  				reject(
+  					"No hemos podido recuperar ese json. El código de respuesta es: " + response.status
+  				);
+  			})
+  			.then(json=>{
+  				try{
+  					for(let prop in json.message){
+  						rellenarListaRazas(prop);
+  					}
+  				}catch (error){
+  					console.log(`No se pudo cargar la imagen. Error: ${error}`);
+  				}
+  				  				
   			})
   			.catch(error => console.error(error))
 	}catch (error){
@@ -126,6 +201,13 @@ async function obtenerDatos(url){
 }
 
 function cargarImagen(message){
-	let imagen = document.getElementById("imagen-contenedor");
-	imagen.setAttribute('src',message);
+	if(!listaImagenes.includes(message)){
+		listaImagenes.push(message);
+		console.log(listaImagenes);
+		let imagen = document.getElementById("imagen-contenedor");
+		imagen.setAttribute('src',message);
+	}else{
+		console.log("La imagen ya se ha cargado anteriormente");
+	}
+	
 }

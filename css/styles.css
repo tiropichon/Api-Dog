@@ -78,11 +78,21 @@ main {
 
 .contenedor img {
 	width: 96%;
-	height: 95%;
+	height: 94%;
 	margin: 2%;
 }
 
 .contenedor-botones {
+	width: min(80%,1200px);
+	margin: 2% 13% 2% 13%;
+	background-image: linear-gradient(to top, black 0%, grey 200%);
+	box-shadow: 0 2px 4px rgba(247, 190, 104, 0.8), 0 4px 12px rgba(247, 190, 104, 0.8);
+	padding: 1% 0 1% 0;
+	display: flex;
+	justify-content: space-around;
+}
+
+.contenedor-filtros {
 	width: min(80%,1200px);
 	margin: 2% 13% 2% 13%;
 	background-image: linear-gradient(to top, black 0%, grey 200%);
