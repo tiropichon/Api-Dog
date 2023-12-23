@@ -18,6 +18,8 @@ header {
 	text-align: center;
 	font-size: 24px;
 	line-height: 1.6;
+	margin: 0;
+	padding: 0;
 }
 
 footer {
@@ -28,7 +30,8 @@ footer {
 	line-height: 2.0;
 	width: 100%;
 	height: auto;
-	margin: 1% 0 0 0;
+	margin: 0;
+	padding: 0;
 	display: flex;
 	justify-content: space-around;
 }
@@ -68,7 +71,7 @@ main {
 
 .contenedor {
 	width: min(80%,1200px);
-	margin: 2% 13% 2% 13%;
+	margin: 1% 13% 1% 13%;
 	background-image: linear-gradient(to top, black 0%, grey 200%);
 	box-shadow: 0 2px 4px rgba(247, 190, 104, 0.8), 0 4px 12px rgba(247, 190, 104, 0.8);
 	padding: 0 0 1% 0;
@@ -84,17 +87,17 @@ main {
 
 .contenedor-botones {
 	width: min(80%,1200px);
-	margin: 2% 13% 2% 13%;
+	margin: 1% 13% 0% 13%;
 	background-image: linear-gradient(to top, black 0%, grey 200%);
 	box-shadow: 0 2px 4px rgba(247, 190, 104, 0.8), 0 4px 12px rgba(247, 190, 104, 0.8);
-	padding: 1% 0 1% 0;
+	padding: 0;
 	display: flex;
 	justify-content: space-around;
 }
 
 .contenedor-filtros {
 	width: min(80%,1200px);
-	margin: 2% 13% 2% 13%;
+	margin: 1% 13% 1% 13%;
 	background-image: linear-gradient(to top, black 0%, grey 200%);
 	box-shadow: 0 2px 4px rgba(247, 190, 104, 0.8), 0 4px 12px rgba(247, 190, 104, 0.8);
 	padding: 1% 0 1% 0;
@@ -115,5 +118,15 @@ main {
 
 .bold {
 	font-weight: bold;
+}
 
+.label {
+	width: 50%;
 
+}
+
+.filtros {
+	color: #f7be68;
+	background-color: black;
+	width: 30%;
+}
