@@ -49,6 +49,7 @@ function init(){
 
 	const labelFiltro = document.createElement("label");
 	labelFiltro.setAttribute('for','filtroRaza');
+	labelFiltro.setAttribute('id','lblRaza');
 	labelFiltro.textContent="Filtrar por raza:";
 	document.getElementById("contenedor-filtros").appendChild(labelFiltro);
 
@@ -66,6 +67,7 @@ function init(){
 
 	const labelFiltroSubraza = document.createElement("label");
 	labelFiltroSubraza.setAttribute('for','filtroSubraza');
+	labelFiltroSubraza.setAttribute('id','lblSubaza');
 	labelFiltroSubraza.textContent="Filtrar por Subraza:";
 	document.getElementById("contenedor-filtros").appendChild(labelFiltroSubraza);
 
@@ -304,13 +306,16 @@ async function obtenerDatosSubrazas(){
 }
 
 function cargarImagen(message){
-	if(!listaImagenes.includes(message)){
-		listaImagenes.push(message);
+	let arrayDeRazas = message.split("/");
+	let raza = arrayDeRazas[4];
+
+	if(!listaImagenes.includes(raza)){
+		listaImagenes.push(raza);
 		console.log(`Array de imágenes: ${listaImagenes}`);
 		let imagen = document.getElementById("imagen-contenedor");
 		imagen.setAttribute('src',message);
 	}else{
-		console.log("La imagen ya se ha cargado anteriormente");
+		alert("Esta raza no se puede mostrar porque ya se ha mostrado anteriormente");
 	}
 	
 }
